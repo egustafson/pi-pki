@@ -79,14 +79,94 @@ and [Step CA](https://smallstep.com/docs/step-ca/)
   * `apt install ./step-kms-plugin_<ver>_amd64.deb`
   * `step kms version`
 
-### Build `step-ca` from source with YubiKey support enabled
+## Build `step-ca` from source with YubiKey support enabled
 
 The `step-ca` binary distribution does not include support for YubiKey
 compiled in.  YubiKey support must be added by compiling the
 executable from Golang source with the appropriate libraries
-(libpcsclite) present.
+(libpcsclite) present.  `step-ca` will be installed in
+`/usr/local/bin`
 
 Additionally, the SD card used as root is very inefficient for such
 compilation.  The following sequence of steps details an SSD drive
-attached through USB and mounted on `/srv` for use in compiling `step-ca`.
+attached through USB and mounted on `/srv` for use in compiling
+`step-ca`.
+
+### Attach SSD for use as tmp drive
+
+* attach an appropriately sized SSD to the USB
+* partition the disk with `fdisk`
+* format the partition with `mke2fs -T ext4 ...`
+* add entry to `/etc/fstab` placing the partition on `/srv`
+  * `mount -a`
+* create and soft-link
+  * `/srv/<username>/go`       <- `/home/<username>/go`
+  * `/srv/<username>/infnoise` <- `/home/<username>/infnoise`
+  * `/srv/<username/step-ca`   <- `/home/<username>/step-ca`
+  * `/srv/<username>/go-cache` # no soft-link
+  * `/srv/go`                  # no soft-link
+  * `/srv/tmp`                 # no soft-link (`chmod 1777`)
+
+### Install Golang for compilation
+
+```
+$ curl -LO https://go.dev/dl/go<version>.linux-arm64.tar.gz
+$ sudo tar -C /srv/go -xzf go<version>.linux-arm64.tar.gz
+$ (cd /usr/local; sudo ln -s /srv/go/go .)
+## ensure your golang env vars are set properly
+## add the following to your environment
+$ export GOTMPDIR /srv/tmp
+$ export GOCACHE /srv/ericg/go-cache
+$ go version`
+```
+
+### Download `step-ca` and prerequisites, and build
+
+```
+$ sudo apt install -y libpcsclite-dev gcc make pkg-config
+$ cd ~  # ensure we're in $HOME, where step-ca is a symlink
+$ curl -LO https://github.com/smallstep/certificates/releases/download/<ver>/step-ca_<ver>.tar.gz
+$ tar -C step-ca step_ca_<ver>.tar.gz
+$ cd step-ca
+$ make bootstrap
+$ make build GOFLAGS=""
+$ bin/step-ca version
+```
+
+### Install `step-ca`
+
+```
+$ cd ~/step-ca
+$ sudo cp bin/step-ca /usr/local/bin
+$ sudo setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/step-ca
+```
+
+### Install drivers for Infinite Noise TRNG
+
+```
+$ sudo apt install -y libftdi-dev libusb-dev
+$ cd ~
+$ curl -LO https://github.com/leetronics/infnoise/archive/refs/tags/<ver>.tar.gz
+$ tar -xvf <ver>.tar.gz
+$ mv infnoise-<ver>/* infnoise  ## copies onto /srv partition
+$ cd infnoise/software
+$ make -f Makefile.linux
+$ sudo make -f Makefile.linux install
+...
+$ infnoise --version
+```
+
+Plugin the TRNG and reboot.
+
+```
+$ sudo systemctl status infnoise
+... output from systemctl showing the service is running ...
+
+$ infnoise --debug --no-output
+... output showing the TRNG is present and running
+^C
+```
+
+
+
 
