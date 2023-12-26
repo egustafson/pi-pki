@@ -69,15 +69,19 @@ and [Step CA](https://smallstep.com/docs/step-ca/)
 
 ## `step` and `step-kms-plugin`
 
-* Download `step` from GitHub
-  * `curl -LO https://github.com/smallstep/cli/releases/download/<ver>/step_cli_<ver>_arm64.deb`
-  * `apt install ./step_cli_<ver>_arm64.deb`
-  * `step version`
+### Download and install `step` from GitHub
+```
+$ curl -LO https://github.com/smallstep/cli/releases/download/<ver>/step_cli_<ver>_arm64.deb
+$ apt install ./step_cli_<ver>_arm64.deb
+$ step version
+```
 
-* Download `step-kms-plugin` from GitHub
-  * `curl -LO https://github.com/smallstep/step-kms-plugin/releases/download/<ver>/step-kms-plugin_<ver>_arm64.deb`
-  * `apt install ./step-kms-plugin_<ver>_amd64.deb`
-  * `step kms version`
+### Download and install `step-kms-plugin` from GitHub
+```
+$ curl -LO https://github.com/smallstep/step-kms-plugin/releases/download/<ver>/step-kms-plugin_<ver>_arm64.deb
+$ apt install ./step-kms-plugin_<ver>_amd64.deb
+$ step kms version
+```
 
 ## Build `step-ca` from source with YubiKey support enabled
 
