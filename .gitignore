@@ -1,3 +1,11 @@
+# .gitignore
+
+# ignore all PEM files
+*.pem
+
+
+##  Python .gitignore below  ##########
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
