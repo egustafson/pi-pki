@@ -1,6 +1,13 @@
 Generating x509 PEM Certs for Certificate Authority
 ===================================================
 
+This document abstracts the organization name in a number of places,
+and in others it may explicitly use the example organization and
+intermediate names.  Throughout this document you will find:
+
+    ${ORG} = Trollwerks  ## The top level organization
+    ${OU}  = Stoneglen   ## Intermediate organizational unit
+
 Root Certificate Authority
 --------------------------
 
@@ -11,7 +18,7 @@ openssl ecparam \
         -genkey \
         -noout \
         -rand /dev/random \
-        -out organization-key.pem
+        -out ${ORG}-ca-key.pem
 
 # create a self-signed certificate
 openssl req \
@@ -19,11 +26,23 @@ openssl req \
         -new \
         -days 18250 \
         -rand /dev/random \
-        -config organization-ca.config \
+        -config ${ORG}-ca.config \
         -extensions v3_ca \
-        -key organization-key.pem \
-        -out organization-crt.pem
+        -key ${ORG}-ca-key.pem \
+        -out ${ORG}-ca-crt.pem
 ```
+
+Load Root CA into YubiKey
+-------------------------
+
+The YubiKey will hold both the Organization's Root CA and the
+Intermediate.  The two certificate-key pairs will be loaded into the
+YubiKey as follows:
+
+    Slot 9a:  Organization Root CA   (Trollwerks)
+    Slot 9c:  Intermediate Cert/Key  (Stoneglen)
+
+
 
 Intermediate Certificate Authority
 ----------------------------------
@@ -44,7 +63,7 @@ Intermediate Certificate Authority
     }
 }
 #
-> cat stoneglen-org.json
+> cat ${OU}-ou.json
 {
     "organizationalUnit": "Stoneglen",
     "organization": "Trollwerks"
@@ -57,12 +76,12 @@ Intermediate Certificate Authority
     --insecure  \
     --not-after 17520h \
     --template intermediate.tpl \
-    --set-file stoneglen-org.json \
-    --ca troll-crt.pem \
-    --ca-key troll-key.pem \
+    --set-file ${OU}-ou.json \
+    --ca ${ORG}-crt.pem \
+    --ca-key ${ORG}-key.pem \
     "Stoneglen Intermediate CA" \
-    stoneglen-intermediate-crt.pem \
-    stoneglen-intermediate-key.pem
+    ${OU}-crt.pem \
+    ${OU}-key.pem
 
 ```
 
@@ -76,14 +95,14 @@ openssl ecparam \
         -genkey \
         -noout \
         -rand /dev/random \
-        -out intermediate-key.pem
+        -out ${OU}-key.pem
 
 # intermediate cert
 openssl req \
         -new \
-        -config intermediate-key.pem \
-        -key intermediate-key.pem \
-        -out intermediate-crt.pem
+        -config ${OU}-ca.config \
+        -key ${OU}-key.pem \
+        -out ${OU}-crt.pem
 ```
 
 
