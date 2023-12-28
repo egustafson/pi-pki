@@ -8,6 +8,33 @@ intermediate names.  Throughout this document you will find:
     ${ORG} = Trollwerks  ## The top level organization
     ${OU}  = Stoneglen   ## Intermediate organizational unit
 
+The use of explicitly defining the random seed (`/dev/random`) is
+intentional.  An [Infinite Noise
+TRNG](https://github.com/waywardgeek/infnoise) is attached and
+available at that device location.
+
+0. Isolated Drive for CA
+------------------------
+
+Create the certificates, keys actually, on an isolated drive; a USB
+or SD card for example.  This will allow the root key to be stored as
+a backup off-line.  Since the root key will never be stored on the
+primary drive, it reduces the risk of the root's key being inadvertently
+available and copied by nefarious actors.
+
+Further precautions may include performing the root key creation while
+the host is disconnected from the network.
+
+The following instructions assume that your storage device maps to
+`/dev/sda`. 
+
+1. Insert storage device.
+
+```
+
+
+```
+
 Root Certificate Authority
 --------------------------
 
@@ -26,8 +53,8 @@ CN = Trollwerks Root Authority
 basicConstraints = critical, CA:true, pathlen:1
 keyUsage = critical, digitalSignature, cRLSign, keyCertSign
 subjectKeyIdentifier = hash
-#
-# generate a private key for a curve
+
+# generate a private key using ECDH
 > openssl ecparam \
           -name prime256v1 \
           -genkey \
@@ -35,7 +62,7 @@ subjectKeyIdentifier = hash
           -rand /dev/random \
           -out ${ORG}-ca-key.pem
 
-# create a self-signed certificate
+# create a self-signed certificate  (18250 days ~= 50 years)
 > openssl req \
           -x509 \
           -new \
