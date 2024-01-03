@@ -1,0 +1,13 @@
+[Unit]
+Description=step-ca PKI
+
+[Service]
+User=step
+Group=step
+ExecStart=/bin/sh -c '/usr/local/bin/step-ca /etc/step-ca/config/ca.json'
+Type=simple
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

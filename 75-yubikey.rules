@@ -1,0 +1,10 @@
+ACTION=="add" \
+, SUBSYSTEM=="usb" \
+, ENV{PRODUCT}=="1050/407/*" \
+, TAG+="systemd" \
+, SYMLINK+="yubikey"
+
+ACTION=="remove" \
+, SUBSYSTEM=="usb" \
+, ENV{PRODUCT}=="1050/407/*" \
+, TAG+="systemd"
