@@ -1,13 +1,14 @@
 [Unit]
 Description=step-ca PKI
+Documentation=https://github.com/egustafson/pi-pki
 
 [Service]
-User=step
-Group=step
-ExecStart=/bin/sh -c '/usr/local/bin/step-ca /etc/step-ca/config/ca.json'
 Type=simple
 Restart=on-failure
 RestartSec=10
+User=step
+Group=step
+ExecStart=/bin/sh -c '/usr/local/bin/step-ca /etc/step-ca/config/ca.json'
 
 [Install]
 WantedBy=multi-user.target
