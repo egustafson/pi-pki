@@ -72,11 +72,12 @@ YubiKey which will be configured into the `step-ca` configuration.
 In this example, the official certificates and keys are located as
 follows:
 
-* Root Certificate:  /tmp/root-cert.pem
-* Intermediate Certificate:  /tmp/intermediate-cert.pem
-
-* Root Key:  YubiKey slot 9a
-* Intermediate Key:  Yubikey slot 9c
+| Credential                | Location                   |
+| ------------------------- | -------------------------- |
+| Root Certificate          | /tmp/root-cert.pem         |
+| Intermediate Certificate  | /tmp/intermediate-cert.pem |
+| Root Key                  | YubiKey slot 9a            |
+| Intermediate Key          | Yubikey slot 9c            |
 
 The following file, `/etc/step-ca/config/ca.json` should replace the
 default configuration from step 2:
