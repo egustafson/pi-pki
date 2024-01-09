@@ -23,6 +23,8 @@ and [Step CA](https://smallstep.com/docs/step-ca/)
 
 # Construction Process
 
-1. [Setup Hardware, Install Software](INSTALL.md)
-2. [Create Root and Intermediate Certificates](ROOT_CA.md)
-3. [Configure CA Software](SERVER.md)
+1. [Setup Hardware, Install Software](1_INSTALL.md)
+2. [Create Root and Intermediate Certificates](2_ROOT_CA.md)
+3. [Configure CA Software](3_SERVER.md)
+
+Done.
