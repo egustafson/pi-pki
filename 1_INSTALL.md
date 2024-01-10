@@ -34,6 +34,10 @@ Bootstrap Board
 * Install Ansible, vim, and git
   * `apt install ansible vim git`
 
+* Uninstall email server exim
+  * `apt purge exim4-daemon-light exim4-config`
+  * `apt autoremove -y`
+
 * Install regular user environment (optional)
   * Clone https://github.com/egustafson/env
   * `cd ~/env/ansible; ansible-playbook -i localhost ericg.yml -K`

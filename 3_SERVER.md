@@ -20,7 +20,7 @@ software:
 ------------------------------------
 
 ```
-> sudo adduser step
+> sudo adduser --system step
 > sudo passwd -l step
 > sudo mkdir /etc/step-ca
 > export STEPPATH=/etc/step-ca
