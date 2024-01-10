@@ -20,7 +20,8 @@ software:
 ------------------------------------
 
 ```
-> sudo adduser --system step
+> sudo addgroup --system step
+> sudo adduser --system --group step step
 > sudo passwd -l step
 > sudo mkdir /etc/step-ca
 > export STEPPATH=/etc/step-ca
@@ -90,7 +91,7 @@ default configuration from step 2:
     "key": "yubikey:slot-id=9c",
     "kms": {
         "type": "yubikey",
-        "pin":  "12345"      # replace with actual pin
+        "pin":  "123456"     # replace with actual pin
     },
     "address": ":443",
     "dnsNames": [ "pki.elfwerks" ],
@@ -230,6 +231,8 @@ and install the unit file as follows:
 
 ```
 > sudo cp step-ca.service /etc/systemd/system/step-ca.service
+> sudo mkdir /etc/systemd/system/dev-yubikey.device.wants
+> sudo ln -s /etc/systemd/system/step-ca.service /etc/systemd/system/dev-yubikey.device.wants/
 > sudo systemctl daemon-reload
 > sudo systemctl enable step-ca
 ```
