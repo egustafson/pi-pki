@@ -6,8 +6,8 @@ YKMAN   = ykman
 
 RANDOM  = /dev/random
 
-ORG    = Trollwerks
-OU     = Stoneglen
+ORG   ?= Trollwerks
+OU    ?= Stoneglen
 L_ORG := $(shell echo $(ORG) | tr A-Z a-z)
 L_OU  := $(shell echo $(OU) | tr A-Z a-z)
 
